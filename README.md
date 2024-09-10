@@ -42,7 +42,10 @@ $docker compose ps
 ```
 
 Access to grafana dashboard
-* http://localhost:3000
+* http://localhost:3000/explore
+  * Loki
+  * Tempo
+  
 
 ## 3. Start API gateway with Kong
 
@@ -57,7 +60,7 @@ $docker compose ps
 $docker compose up -d kong
 $docker compose ps
 ```
-Access to Kong GUI
+### Access to Kong GUI
 * http://localhost:8002
 
 ### Access to nodejs services from API gateway
