@@ -6,6 +6,10 @@
   * PostgreSQL
 * Api gateway
   * Kong with db-less mode
+  * Plug-ins
+    * [Prometheus](https://docs.konghq.com/hub/kong-inc/prometheus/)
+    * [HTTP Log](https://docs.konghq.com/hub/kong-inc/http-log/)
+    * [OpenTelemetry](https://docs.konghq.com/hub/kong-inc/opentelemetry/)
 * LGTM stack
   * Log with Loki
   * Grafana fir visualization
