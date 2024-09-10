@@ -74,6 +74,8 @@ Access to grafana dashboard
 * http://localhost:3000/explore
   * Loki
   * Tempo
+  * Prometheus
+    * metric name = learn_metric_total
 
 ## 4. Working with Application metric
 * Kong's metric
@@ -82,6 +84,7 @@ Access to grafana dashboard
   * http://localhost:3002/metrics
 
 ### Start [PostgreSQL's exporter](https://github.com/prometheus-community/postgres_exporter)
+* [Prometheus exporters](https://prometheus.io/docs/instrumenting/exporters/)
 ```
 $docker compose up -d db-exporter
 $docker compose ps
@@ -89,3 +92,12 @@ $docker compose ps
 
 PostgreSQL's metric
 * http://localhost:9187/metrics
+
+## 5. Working with Application metric
+* Prometheus
+* Grafana
+
+### Delete all
+```
+$docker compose down
+```

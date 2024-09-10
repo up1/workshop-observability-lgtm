@@ -2,8 +2,14 @@
 const getData = require('./db')
 const express = require('express')
 const { ExpressPrometheusMiddleware } = require('@matteodisabatino/express-prometheus-middleware')
-const { trace } = require('@opentelemetry/api');
+const { trace, metrics } = require('@opentelemetry/api');
 const logger = require('./logger')
+
+// Custom metrics
+const meter = metrics.getMeter("nodejs-service");
+let counter = meter.createCounter("learn-metric", {
+  description: "The number of requests per name the server got",
+});
 
 const app = express()
 const epm = new ExpressPrometheusMiddleware()
@@ -12,12 +18,18 @@ app.use(epm.handler)
 
 // Main API
 app.get('/', (req, res, next) => {
+  // 1. Write logs
   logger.info({
     message: 'This is service from NodeJS',
     method: req.method,
     url: req.url,
     headers: req.headers
   });
+  // 2. Custom metrics
+  const statuses = [200, 400, 500];
+  const pos = Math.floor(Math.random() * statuses.length);
+  counter.add(1, { desc: 'get-data', path: '/', status: statuses[pos] });
+  // 3. Send response
   setTimeout(() => {
     res.json({ message: 'This is service from NodeJS' })
   }, Math.round(Math.random() * 200))
