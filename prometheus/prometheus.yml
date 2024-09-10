@@ -1,0 +1,22 @@
+scrape_configs:
+  - job_name: 'node-service'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['nodejs:3000']
+        labels:
+          application: 'node-service'
+  - job_name: 'kong'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['kong:8001']
+        labels:
+          application: 'kong'
+  - job_name: 'postgresql'
+    scrape_interval: 5s
+    metrics_path: '/metrics'
+    static_configs:
+      - targets: ['db-exporter:9187']
+        labels:
+          application: 'postgresql'

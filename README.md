@@ -101,3 +101,40 @@ PostgreSQL's metric
 ```
 $docker compose down
 ```
+
+### Start database to testing
+```
+$docker compose up -d nodejs
+$docker compose up -d db-exporter
+```
+
+PostgreSQL's metric
+* http://localhost:9187/metrics
+
+### Start prometheus server
+```
+$docker compose up -d prometheus
+```
+
+Prometheus server
+* http://localhost:9090
+  * Go to menu Status -> Targets
+
+
+### Start Kong to testing
+```
+$docker compose up -d kong
+```
+
+* Kong's metric
+  * http://localhost:8001/metrics
+
+### Start grafana server
+```
+$docker compose build grafana
+$docker compose up -d grafana
+```
+
+Prometheus server
+* http://localhost:3000
+  * Go to menu Status -> Targets

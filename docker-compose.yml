@@ -35,8 +35,8 @@ services:
   db-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter
     environment:
-      DATA_SOURCE_URI: "db:5432/postgres?sslmode=disable"
-      DATA_SOURCE_USER: postgres
+      DATA_SOURCE_URI: "db:5432/demo?sslmode=disable"
+      DATA_SOURCE_USER: user
       DATA_SOURCE_PASS: pass
     ports:
       - "9187:9187"
@@ -86,5 +86,18 @@ services:
       - --config=/fluent-bit/etc/fluent-bit.yaml
     volumes:
       - ./fluentbit/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml"
+
+  grafana:
+    build: 
+      context: ./grafana
+    ports:
+      - 3000:3000
 
   
