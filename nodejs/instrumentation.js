@@ -11,6 +11,7 @@ const {
 const { PeriodicExportingMetricReader } = require('@opentelemetry/sdk-metrics');
 const { ExpressInstrumentation } = require('@opentelemetry/instrumentation-express');
 const { PgInstrumentation } = require('@opentelemetry/instrumentation-pg');
+const { PinoInstrumentation } = require('@opentelemetry/instrumentation-pino');
 
 const sdk = new opentelemetry.NodeSDK({
   traceExporter: new OTLPTraceExporter({
@@ -37,6 +38,7 @@ const sdk = new opentelemetry.NodeSDK({
     }),
     new ExpressInstrumentation(),
     new PgInstrumentation(),
+    new PinoInstrumentation(),
 ],
 });
 

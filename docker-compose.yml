@@ -6,6 +6,10 @@ services:
     environment:
       OTEL_SERVICE_NAME: nodejs-service
       OTEL_COLLECTOR_SERVER: http://otel-collector:4318
+
+      OTEL_EXPORTER_OTLP_LOGS_PROTOCOL: grpc 
+      OTEL_EXPORTER_OTLP_LOGS_ENDPOINT: http://otel-collector:4317
+      OTEL_RESOURCE_ATTRIBUTES: service.name=nodejs-service,service.version=1.0.0
     depends_on:
       db:
         condition: service_healthy
@@ -73,7 +77,7 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
 
   fluentbit:
-    image: fluent/fluent-bit:3.1.0
+    image: fluent/fluent-bit:3.1.7
     container_name: fluentbit
     command:
       - --config=/fluent-bit/etc/fluent-bit.yaml

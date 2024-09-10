@@ -3,6 +3,8 @@ const getData = require('./db')
 const express = require('express')
 const { ExpressPrometheusMiddleware } = require('@matteodisabatino/express-prometheus-middleware')
 const { trace } = require('@opentelemetry/api');
+const logger = require('./logger')
+
 const app = express()
 const epm = new ExpressPrometheusMiddleware()
 const port = process.env.PORT || 3000
@@ -10,6 +12,7 @@ app.use(epm.handler)
 
 // Main API
 app.get('/', (req, res, next) => {
+  logger.info('This is service from NodeJS')
   setTimeout(() => {
     res.json({ message: 'This is service from NodeJS' })
   }, Math.round(Math.random() * 200))
