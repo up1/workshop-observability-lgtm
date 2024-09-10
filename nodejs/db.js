@@ -1,7 +1,11 @@
 const { Client } = require('pg')
+const logger = require('./logger')
 
 const getData = async () => {
     try {
+        logger.info({
+            message: 'Called database'
+        });
         const client = new Client({
             host: 'db',
             port: 5432,

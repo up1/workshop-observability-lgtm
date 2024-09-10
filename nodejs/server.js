@@ -12,22 +12,42 @@ app.use(epm.handler)
 
 // Main API
 app.get('/', (req, res, next) => {
-  logger.info('This is service from NodeJS')
+  logger.info({
+    message: 'This is service from NodeJS',
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  });
   setTimeout(() => {
     res.json({ message: 'This is service from NodeJS' })
   }, Math.round(Math.random() * 200))
 })
 
 app.get('/call-db', async (req, res, next) => {
+  logger.info({
+    message: 'Called database',
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  });
   await getData();
   res.json({ message: 'Called database' })
 })
 
 app.get('/steps', (req, res, next) => {
+  logger.info({
+    message: 'Called more steps',
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  });
   const tracer = trace.getTracer('steps');
   return tracer.startActiveSpan('step-0', (span) => {
     try {
       step1()
+      setTimeout(() => {
+        console.log('Step final')
+      }, Math.round(2000))
       return res.json({ message: 'Called more steps' })
     } catch (error) {
       console.error(error);
@@ -43,8 +63,11 @@ const step1 = () => {
     try {
       setTimeout(() => {
         console.log('Step 1')
+        logger.info({
+          message: 'Step 1'
+        });
+        step2()
       }, Math.round(Math.random() * 200))
-      step2()
     } catch (error) {
       console.error(error);
     } finally {
@@ -59,6 +82,9 @@ const step2 = () => {
     try {
       setTimeout(() => {
         console.log('Step 2')
+        logger.info({
+          message: 'Step 2'
+        });
       }, Math.round(Math.random() * 200))
     } catch (error) {
       console.error(error);
