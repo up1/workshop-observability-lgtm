@@ -29,7 +29,12 @@ const sdk = new opentelemetry.NodeSDK({
     exportIntervalMillis: 1000
   }),
   instrumentations: [
-    getNodeAutoInstrumentations(),
+    getNodeAutoInstrumentations({
+      // only instrument fs if it is part of another trace
+      '@opentelemetry/instrumentation-fs': {
+        requireParentSpan: true,
+      },
+    }),
     new ExpressInstrumentation(),
     new PgInstrumentation(),
 ],
