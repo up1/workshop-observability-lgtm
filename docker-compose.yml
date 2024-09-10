@@ -5,7 +5,7 @@ services:
       - 3002:3000
     environment:
       OTEL_SERVICE_NAME: nodejs-service
-      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_COLLECTOR_SERVER: http://otel-collector:4318
     depends_on:
       db:
         condition: service_healthy

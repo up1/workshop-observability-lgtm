@@ -3,7 +3,7 @@ const { Client } = require('pg')
 const getData = async () => {
     try {
         const client = new Client({
-            host: 'localhost',
+            host: 'db',
             port: 5432,
             database: 'demo',
             user: 'user',
