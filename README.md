@@ -12,6 +12,7 @@
     * [OpenTelemetry](https://docs.konghq.com/hub/kong-inc/opentelemetry/)
 * LGTM stack
   * Log with Loki
+    * [Fluentbit](https://fluentbit.io/)
   * Grafana fir visualization
   * Tracing with Tempo
   * Metric with Prometheus
