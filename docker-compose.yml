@@ -1,0 +1,83 @@
+services:
+  nodejs:
+    build: ./nodejs
+    ports:
+      - 3002:3000
+    environment:
+      OTEL_SERVICE_NAME: nodejs-service
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16.4
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: demo
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "user"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - ./db/tables.sql:/docker-entrypoint-initdb.d/1.sql
+      - ./db/data.sql:/docker-entrypoint-initdb.d/2.sql
+
+  db-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    environment:
+      DATA_SOURCE_URI: "db:5432/postgres?sslmode=disable"
+      DATA_SOURCE_USER: postgres
+      DATA_SOURCE_PASS: pass
+    ports:
+      - "9187:9187"
+
+  kong:
+    image: kong:3.7.1-ubuntu
+    container_name: kong
+    volumes:
+      - ./kong/kong.yaml:/config/kong.yaml
+    environment:
+      - KONG_DATABASE=off
+      - KONG_DECLARATIVE_CONFIG=/config/kong.yaml
+      - KONG_ADMIN_LISTEN=0.0.0.0:8001
+      - KONG_ADMIN_GUI_LISTEN=0.0.0.0:8002
+      - KONG_PROXY_LISTEN=0.0.0.0:8000
+      - KONG_STATUS_LISTEN=0.0.0.0:8100
+      - KONG_TRACING_INSTRUMENTATIONS=all
+      - KONG_TRACING_SAMPLING_RATE=1.0
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+      - "8002:8002"
+      - "8100:8100"
+
+  otel-collector:
+    image: grafana/otel-lgtm:0.7.1
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "3000:3000"
+    healthcheck:
+      test: curl --silent --fail localhost:3000 || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    environment:
+      - GF_USERS_DEFAULT_THEME=light
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+
+  fluentbit:
+    image: fluent/fluent-bit:3.1.0
+    container_name: fluentbit
+    command:
+      - --config=/fluent-bit/etc/fluent-bit.yaml
+    volumes:
+      - ./fluentbit/fluent-bit.yaml:/fluent-bit/etc/fluent-bit.yaml
+
+  
