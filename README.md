@@ -137,4 +137,5 @@ $docker compose up -d grafana
 
 Prometheus server
 * http://localhost:3000
-  * Go to menu Status -> Targets
+  * user=admin
+  * password=admin
