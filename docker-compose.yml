@@ -1,3 +1,6 @@
+volumes:
+  somkiatdb:
+
 services:
   nodejs:
     build: ./nodejs
@@ -44,6 +47,7 @@ services:
     volumes:
       - ./db/tables.sql:/docker-entrypoint-initdb.d/1.sql
       - ./db/data.sql:/docker-entrypoint-initdb.d/2.sql
+      - somkiatdb:/var/lib/postgresql/data
 
   db-exporter:
     image: quay.io/prometheuscommunity/postgres-exporter
@@ -112,5 +116,14 @@ services:
       context: ./grafana
     ports:
       - 3000:3000
+
+  python:
+    build: ./python
+    ports:
+      - 8000:8000
+    environment:
+      OTEL_EXPORTER_OTLP_ENDPOINT: http://otel-collector:4318
+      OTEL_SERVICE_NAME: python-service
+      OTEL_RESOURCE_ATTRIBUTES: service.name=python-service,service.version=1.0.0
 
   
